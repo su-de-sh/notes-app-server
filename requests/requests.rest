@@ -1,0 +1,4 @@
+GET http://localhost:3001/notes/
+
+###
+DELETE http://localhost:3001/notes/1
