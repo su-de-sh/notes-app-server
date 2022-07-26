@@ -1,8 +1,10 @@
 const express = require("express");
 const cors = require("cors");
+const { response } = require("express");
 const App = express();
 
 App.use(cors());
+App.use(express.json());
 
 let notes = [
   {
@@ -43,11 +45,18 @@ App.get("/notes/:id", (request, response) => {
       .json({ error: "404", message: `Notes with id:${id} not found` });
 });
 
+App.post("/notes/", (request, response) => {
+  let data = request.body;
+  data = { ...data, id: notes.length + 1, date: new Date().toISOString() };
+  notes.push(data);
+  response.send(data);
+});
+
 App.delete("/notes/:id", (request, response) => {
   const id = Number(request.params.id);
   notes = notes.filter((note) => note.id !== id);
 
-  response.status(204).end();
+  response.status(204).send(`Note with id ${id} deleted!!`);
 });
 
 App.listen("3001", () => {
