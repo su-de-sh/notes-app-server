@@ -6,6 +6,16 @@ const App = express();
 App.use(cors());
 App.use(express.json());
 
+const requestLogger = (request, response, next) => {
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("---");
+  next();
+};
+
+App.use(requestLogger);
+
 let notes = [
   {
     id: 1,
@@ -58,6 +68,12 @@ App.delete("/notes/:id", (request, response) => {
 
   response.status(204).send(`Note with id ${id} deleted!!`);
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+App.use(unknownEndpoint);
 
 App.listen("3001", () => {
   console.log("Server running on port 3001");
