@@ -49,7 +49,7 @@ App.post("/notes/", (request, response) => {
   let data = request.body;
   data = { ...data, id: notes.length + 1, date: new Date().toISOString() };
   notes.push(data);
-  response.send(data);
+  response.status(201).json(data);
 });
 
 App.delete("/notes/:id", (request, response) => {
