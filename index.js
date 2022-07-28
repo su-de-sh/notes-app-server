@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { response } = require("express");
 const App = express();
-
+App.use(express.static("build"));
 App.use(cors());
 App.use(express.json());
 
@@ -75,6 +75,8 @@ const unknownEndpoint = (request, response) => {
 
 App.use(unknownEndpoint);
 
-App.listen("3001", () => {
-  console.log("Server running on port 3001");
+const PORT = process.env.PORT || "3001";
+
+App.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
