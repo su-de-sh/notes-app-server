@@ -82,6 +82,21 @@ App.post("/notes", (request, response) => {
   });
 });
 
+App.put("notes/:id", (request, response, next) => {
+  const body = request.body;
+
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch((error) => next(error));
+});
+
 App.delete("/notes/:id", (request, response, next) => {
   // const id = Number(request.params.id);
   // notes = notes.filter((note) => note.id !== id);
