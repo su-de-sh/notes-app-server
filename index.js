@@ -49,15 +49,24 @@ App.get("/notes", (request, response) => {
   });
 });
 
-App.get("/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
+App.get("/notes/:id", (request, response, next) => {
+  // const id = Number(request.params.id);
 
-  const note = notes.find((note) => note.id === id);
-  if (note) response.json(note);
-  else
-    response
-      .status(404)
-      .json({ error: "404", message: `Notes with id:${id} not found` });
+  // const note = notes.find((note) => note.id === id);
+  // if (note) response.json(note);
+  // else
+  //   response
+  //     .status(404)
+  //     .json({ error: "404", message: `Notes with id:${id} not found` });
+  Note.findById(request.params.id)
+    .then((note) => {
+      if (note) {
+        response.json(note);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 App.post("/notes", (request, response) => {
@@ -85,6 +94,19 @@ const unknownEndpoint = (request, response) => {
 };
 
 App.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+// this has to be the last loaded middleware.
+App.use(errorHandler);
 
 const PORT = process.env.PORT || "3001";
 
