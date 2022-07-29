@@ -63,8 +63,8 @@ App.get("/notes/:id", (request, response) => {
 App.post("/notes", (request, response) => {
   let data = request.body;
   const note = new Note({
-    content: note.content,
-    important: note.important,
+    content: data.content,
+    important: data.important,
     date: new Date(),
   });
 
