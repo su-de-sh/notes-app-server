@@ -82,11 +82,17 @@ App.post("/notes", (request, response) => {
   });
 });
 
-App.delete("/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  notes = notes.filter((note) => note.id !== id);
+App.delete("/notes/:id", (request, response, next) => {
+  // const id = Number(request.params.id);
+  // notes = notes.filter((note) => note.id !== id);
 
-  response.status(204).send(`Note with id ${id} deleted!!`);
+  // response.status(204).send(`Note with id ${id} deleted!!`);
+
+  Note.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (request, response) => {
