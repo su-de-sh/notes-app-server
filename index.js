@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const { response } = require("express");
 const App = express();
+require("dotenv").config();
+const Note = require("./models/note");
+
 App.use(express.static("build"));
 App.use(cors());
 App.use(express.json());
