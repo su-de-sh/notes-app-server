@@ -60,11 +60,17 @@ App.get("/notes/:id", (request, response) => {
       .json({ error: "404", message: `Notes with id:${id} not found` });
 });
 
-App.post("/notes/", (request, response) => {
+App.post("/notes", (request, response) => {
   let data = request.body;
-  data = { ...data, id: notes.length + 1, date: new Date().toISOString() };
-  notes.push(data);
-  response.status(201).json(data);
+  const note = new Note({
+    content: note.content,
+    important: note.important,
+    date: new Date(),
+  });
+
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 App.delete("/notes/:id", (request, response) => {
