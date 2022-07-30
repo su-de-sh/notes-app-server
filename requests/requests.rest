@@ -13,3 +13,12 @@ Content-Type: application/json
   "content": "I am a original new note", 
   "important": false
 }
+
+###
+PUT http://localhost:3001/notes/62e396707c6398d38ee3f9cf
+Content-Type: application/json
+
+{
+  "content":"I am random",
+  "important": true
+}

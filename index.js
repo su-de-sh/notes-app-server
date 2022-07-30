@@ -82,9 +82,9 @@ App.post("/notes", (request, response) => {
   });
 });
 
-App.put("notes/:id", (request, response, next) => {
+App.put("/notes/:id", (request, response, next) => {
   const body = request.body;
-
+  console.log("here");
   const note = {
     content: body.content,
     important: body.important,
