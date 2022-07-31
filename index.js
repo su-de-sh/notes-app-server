@@ -69,7 +69,7 @@ App.get("/notes/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-App.post("/notes", (request, response) => {
+App.post("/notes", (request, response, next) => {
   let data = request.body;
   const note = new Note({
     content: data.content,
@@ -77,9 +77,12 @@ App.post("/notes", (request, response) => {
     date: new Date(),
   });
 
-  note.save().then((savedNote) => {
-    response.json(savedNote);
-  });
+  note
+    .save()
+    .then((savedNote) => {
+      response.json(savedNote);
+    })
+    .catch((error) => next(error));
 });
 
 App.put("/notes/:id", (request, response, next) => {
@@ -90,7 +93,11 @@ App.put("/notes/:id", (request, response, next) => {
     important: body.important,
   };
 
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(request.params.id, note, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
     .then((updatedNote) => {
       response.json(updatedNote);
     })
@@ -121,6 +128,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
