@@ -1,6 +1,6 @@
 const notesRouter = require("express").Router();
-const Note = require("../models/note");
-const User = require("../models/user");
+const Note = require("../models/noteShcema");
+const User = require("../models/userSchema");
 
 notesRouter.get("/", async (request, response) => {
   const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
