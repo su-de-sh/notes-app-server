@@ -31,24 +31,24 @@ const getTokenFrom = (request) => {
 };
 
 notesRouter.post("/", async (request, response, next) => {
-  const body = request.body;
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
-  const user = await User.findById(decodedToken.id);
-  // const user = await User.findById(body.userId);
-
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
-    user: user._id,
-  });
-
   try {
+    const body = request.body;
+    const token = getTokenFrom(request);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: "token missing or invalid" });
+    }
+    const user = await User.findById(decodedToken.id);
+    // const user = await User.findById(body.userId);
+
+    const note = new Note({
+      content: body.content,
+      important: body.important || false,
+      date: new Date(),
+      user: user._id,
+    });
+
     const savedNote = await note.save();
     user.notes = user.notes.concat(savedNote._id);
     await user.save();
